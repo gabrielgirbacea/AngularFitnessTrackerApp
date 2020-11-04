@@ -53,9 +53,14 @@
       Aggree to Terms and Conditions
     </mat-checkbox>
 
-    <div>
+    <div fxLayout fxLayoutGap="10px">
       <a mat-button routerLink="/login">Log In</a>
-      <button (click)="signup()" [disabled]="!termsAndConditionsControl.value" mat-raised-button color="primary">
+      <button
+        (click)="signup()"
+        [disabled]="!termsAndConditionsControl.value"
+        mat-raised-button
+        color="primary"
+      >
         Sign up
       </button>
     </div>
