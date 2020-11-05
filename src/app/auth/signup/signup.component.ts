@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -7,7 +8,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./signup.component.css'],
 })
 export class SignupComponent {
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService) {
     this.maxDate = new Date();
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
   }
@@ -25,18 +26,22 @@ export class SignupComponent {
   // Public methods
 
   signup(): void {
-    // if (this.signupForm.valid) {
+    if (this.signupForm.valid) {
       console.log(this.signupForm.value);
-      // this.authService.signup(this.emailControl.value.trim(), this.passwordControl.value.trim()).subscribe(
+      this.authService.registerUser({
+        email: this.emailControl.value.trim(),
+        password: this.passwordControl.value.trim(),
+      });
+      // .subscribe(
       //   () => {
-      //     this.router.navigate(["/contacts"]);
+      //     this.router.navigate(['/contacts']);
       //   },
-      //   error => {
+      //   (error) => {
       //     console.log(error);
       //     alert(error.error);
       //   }
       // );
-    // }
+    }
   }
 
   get emailControl(): AbstractControl {

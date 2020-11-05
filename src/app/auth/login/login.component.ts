@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -7,7 +8,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private authService: AuthService) {}
 
   // Build the form
   loginForm = this.fb.group({
@@ -18,18 +19,22 @@ export class LoginComponent {
   // Public methods
 
   login(): void {
-    // if (this.loginForm.valid) {
+    if (this.loginForm.valid) {
       console.log(this.loginForm.value);
-      // this.authService.login(this.emailControl.value.trim(), this.passwordControl.value.trim()).subscribe(
+      this.authService.login({
+        email: this.emailControl.value.trim(),
+        password: this.passwordControl.value.trim(),
+      });
+      // .subscribe(
       //   () => {
-      //     this.router.navigate(["/contacts"]);
+      //     this.router.navigate(['/contacts']);
       //   },
-      //   error => {
+      //   (error) => {
       //     console.log(error);
       //     alert(error.error);
       //   }
       // );
-    // }
+    }
   }
 
   get emailControl(): AbstractControl {
