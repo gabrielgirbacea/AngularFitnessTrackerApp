@@ -2,16 +2,17 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { UIService } from '../shared/ui.service';
 import { TrainingService } from '../training/training.service';
 import { AuthData } from './auth-data.model';
-import { User } from './user.model';
 
 @Injectable()
 export class AuthService {
   constructor(
     private router: Router,
     private angularFireAuth: AngularFireAuth,
-    private trainingService: TrainingService
+    private trainingService: TrainingService,
+    private uiService: UIService
   ) {}
 
   authChange = new Subject<boolean>();
@@ -33,23 +34,28 @@ export class AuthService {
   }
 
   registerUser(authData: AuthData): void {
+    this.uiService.loadingStateChanged.next(true);
+
     this.angularFireAuth
       .createUserWithEmailAndPassword(authData.email, authData.password)
       .then((result) => {
         console.log(result);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => this.uiService.showSnackbar(error.message, null, 3000))
+      .finally(() => this.uiService.loadingStateChanged.next(false));
   }
 
   login(authData: AuthData): void {
+    this.uiService.loadingStateChanged.next(true);
     this.angularFireAuth
       .signInWithEmailAndPassword(authData.email, authData.password)
       .then((result) => {
         console.log(result);
       })
       .catch((error) => {
-        console.log(error);
-      });
+        this.uiService.showSnackbar(error.message, null, 3000);
+      })
+      .finally(() => this.uiService.loadingStateChanged.next(false));
   }
 
   logout(): void {

@@ -28,11 +28,12 @@
         getErrorMessage(passwordControl)
       }}</mat-error>
     </mat-form-field>
-    <div fxLayout fxLayoutGap="10px">
+    <div *ngIf="!isLoading" fxLayout fxLayoutGap="10px">
       <a mat-button routerLink="/signup">Sign up</a>
       <button (click)="login()" mat-raised-button color="primary">
         Log in
       </button>
     </div>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
   </form>
 </section>

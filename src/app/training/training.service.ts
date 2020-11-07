@@ -2,20 +2,23 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { UIService } from '../shared/ui.service';
 import { Exercise } from './exercise.model';
 
 @Injectable()
 export class TrainingService {
-  constructor(private db: AngularFirestore) {}
+  constructor(private db: AngularFirestore, private uiService: UIService) {}
 
   private availableExercises: Exercise[];
   private runningExercise: Exercise;
-  private fbSubs: Subscription[];
+  private fbSubs: Subscription[] = [];
   runningExerciseChanged = new Subject<Exercise>();
   availableExercisesChanged = new Subject<Exercise[]>();
   finishedExercisesChanged = new Subject<Exercise[]>();
 
   fetchAvailableExercises(): void {
+    this.uiService.loadingStateChanged.next(true);
+
     this.fbSubs.push(
       this.db
         .collection('availableExercises')
@@ -32,10 +35,23 @@ export class TrainingService {
             });
           })
         )
-        .subscribe((exercises: Exercise[]) => {
-          this.availableExercises = exercises;
-          this.availableExercisesChanged.next([...this.availableExercises]);
-        })
+        .subscribe(
+          (exercises: Exercise[]) => {
+            this.uiService.loadingStateChanged.next(false);
+
+            this.availableExercises = exercises;
+            this.availableExercisesChanged.next([...this.availableExercises]);
+          },
+          (error) => {
+            this.uiService.showSnackbar(
+              'Fetching Exercises failed. Please try again.',
+              null,
+              3000
+            );
+            this.uiService.loadingStateChanged.next(false);
+            this.availableExercisesChanged.next(null);
+          }
+        )
     );
   }
 
@@ -87,7 +103,7 @@ export class TrainingService {
   }
 
   cancelSubscrptions(): void {
-    this.fbSubs.forEach((sub) => sub.unsubscribe);
+    this.fbSubs.forEach((sub) => sub.unsubscribe());
   }
 
   private addDatatToDatabase(exercise: Exercise): void {

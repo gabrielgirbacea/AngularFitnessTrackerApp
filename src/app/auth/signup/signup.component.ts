@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { UIService } from 'src/app/shared/ui.service';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -7,13 +9,19 @@ import { AuthService } from '../auth.service';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css'],
 })
-export class SignupComponent {
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+export class SignupComponent implements OnInit, OnDestroy {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private uiService: UIService
+  ) {
     this.maxDate = new Date();
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
   }
 
   maxDate: Date;
+  isLoading = false;
+  loadingSubscription: Subscription;
 
   // Build the form
   signupForm = this.fb.group({
@@ -22,6 +30,17 @@ export class SignupComponent {
     birthdate: ['', [Validators.required]],
     termsAndConditions: ['', [Validators.required]],
   });
+
+  ngOnInit(): void {
+    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
+      (loadingStatus) => (this.isLoading = loadingStatus)
+    );
+  }
+  ngOnDestroy(): void {
+    if (this.loadingSubscription) {
+      this.loadingSubscription.unsubscribe();
+    }
+  }
 
   // Public methods
 
@@ -32,15 +51,6 @@ export class SignupComponent {
         email: this.emailControl.value.trim(),
         password: this.passwordControl.value.trim(),
       });
-      // .subscribe(
-      //   () => {
-      //     this.router.navigate(['/contacts']);
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //     alert(error.error);
-      //   }
-      // );
     }
   }
 

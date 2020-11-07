@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { UIService } from 'src/app/shared/ui.service';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -7,14 +9,33 @@ import { AuthService } from '../auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+export class LoginComponent implements OnInit, OnDestroy {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private uiService: UIService
+  ) {}
+
+  isLoading = false;
+  loadingSubscription: Subscription;
 
   // Build the form
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
+
+  ngOnInit(): void {
+    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
+      (loadingState) => (this.isLoading = loadingState)
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.loadingSubscription) {
+      this.loadingSubscription.unsubscribe();
+    }
+  }
 
   // Public methods
 
