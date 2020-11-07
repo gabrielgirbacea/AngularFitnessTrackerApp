@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
 
@@ -8,13 +10,15 @@ import { TrainingService } from '../training.service';
   templateUrl: './new-training.component.html',
   styleUrls: ['./new-training.component.css'],
 })
-export class NewTrainingComponent implements OnInit {
+export class NewTrainingComponent implements OnInit, OnDestroy {
   constructor(
     private trainingService: TrainingService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private db: AngularFirestore
   ) {}
 
-  exercices: Exercise[];
+  exercises: Exercise[];
+  exerciseSubscription: Subscription;
 
   // Build the form
   newTrainingForm = this.fb.group({
@@ -26,7 +30,16 @@ export class NewTrainingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.exercices = this.trainingService.getAvailableExercises();
+    this.trainingService.fetchAvailableExercises();
+    this.exerciseSubscription = this.trainingService.availableExercisesChanged.subscribe(
+      (exercises) => {
+        this.exercises = exercises;
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.exerciseSubscription.unsubscribe();
   }
 
   onStartTraining(): void {
