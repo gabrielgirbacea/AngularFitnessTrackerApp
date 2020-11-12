@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { UIService } from 'src/app/shared/ui.service';
+import { Observable, Subscription } from 'rxjs';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
+import * as fromRoot from '../../app.reducer';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-new-training',
@@ -14,13 +15,12 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
   constructor(
     private trainingService: TrainingService,
     private fb: FormBuilder,
-    private uiService: UIService
+    private store: Store<fromRoot.State>
   ) {}
 
   exercises: Exercise[];
   exerciseSubscription: Subscription;
-  loadingSubscription: Subscription;
-  isLoading = true;
+  isLoading$: Observable<boolean>;
 
   // Build the form
   newTrainingForm = this.fb.group({
@@ -38,16 +38,11 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
         this.exercises = exercises;
       }
     );
-    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
-      (loadingState) => (this.isLoading = loadingState)
-    );
+
+    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
   }
 
   ngOnDestroy(): void {
-    if (this.loadingSubscription) {
-      this.loadingSubscription.unsubscribe();
-    }
-
     if (this.exerciseSubscription) {
       this.exerciseSubscription.unsubscribe();
     }

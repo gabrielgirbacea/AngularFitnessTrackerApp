@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { UIService } from '../shared/ui.service';
 import { TrainingService } from '../training/training.service';
 import { AuthData } from './auth-data.model';
+import * as fromRoot from '../app.reducer';
+import * as UI from '../shared/ui.actions';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +15,8 @@ export class AuthService {
     private router: Router,
     private angularFireAuth: AngularFireAuth,
     private trainingService: TrainingService,
-    private uiService: UIService
+    private uiService: UIService,
+    private store: Store<fromRoot.State>
   ) {}
 
   authChange = new Subject<boolean>();
@@ -34,7 +38,7 @@ export class AuthService {
   }
 
   registerUser(authData: AuthData): void {
-    this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch(new UI.StartLoading());
 
     this.angularFireAuth
       .createUserWithEmailAndPassword(authData.email, authData.password)
@@ -42,11 +46,14 @@ export class AuthService {
         console.log(result);
       })
       .catch((error) => this.uiService.showSnackbar(error.message, null, 3000))
-      .finally(() => this.uiService.loadingStateChanged.next(false));
+      .finally(() =>
+        this.store.dispatch(new UI.StopLoading())
+      );
   }
 
   login(authData: AuthData): void {
-    this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch(new UI.StartLoading());
+
     this.angularFireAuth
       .signInWithEmailAndPassword(authData.email, authData.password)
       .then((result) => {
@@ -55,7 +62,9 @@ export class AuthService {
       .catch((error) => {
         this.uiService.showSnackbar(error.message, null, 3000);
       })
-      .finally(() => this.uiService.loadingStateChanged.next(false));
+      .finally(() =>
+        this.store.dispatch(new UI.StopLoading())
+      );
   }
 
   logout(): void {

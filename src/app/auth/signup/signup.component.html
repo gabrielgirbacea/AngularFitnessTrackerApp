@@ -53,7 +53,7 @@
       Aggree to Terms and Conditions
     </mat-checkbox>
 
-    <div *ngIf="!isLoading" fxLayout fxLayoutGap="10px">
+    <div *ngIf="!(isLoading$ | async)" fxLayout fxLayoutGap="10px">
       <a mat-button routerLink="/login">Log In</a>
       <button
         (click)="signup()"
@@ -64,6 +64,6 @@
         Sign up
       </button>
     </div>
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
   </form>
 </section>

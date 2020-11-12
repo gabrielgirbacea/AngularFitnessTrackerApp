@@ -1,23 +1,24 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { UIService } from 'src/app/shared/ui.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import {} from 'src/app/shared/ui.service';
 import { AuthService } from '../auth.service';
+import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private uiService: UIService
+    private store: Store<fromRoot.State>
   ) {}
 
-  isLoading = false;
-  loadingSubscription: Subscription;
+  isLoading$: Observable<boolean>;
 
   // Build the form
   loginForm = this.fb.group({
@@ -26,15 +27,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
-      (loadingState) => (this.isLoading = loadingState)
-    );
-  }
-
-  ngOnDestroy(): void {
-    if (this.loadingSubscription) {
-      this.loadingSubscription.unsubscribe();
-    }
+    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
   }
 
   // Public methods
@@ -46,15 +39,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         email: this.emailControl.value.trim(),
         password: this.passwordControl.value.trim(),
       });
-      // .subscribe(
-      //   () => {
-      //     this.router.navigate(['/contacts']);
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //     alert(error.error);
-      //   }
-      // );
     }
   }
 

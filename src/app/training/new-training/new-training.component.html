@@ -6,7 +6,7 @@
       </mat-card-title>
 
       <mat-card-content fxLayoutAlign="center">
-        <mat-form-field *ngIf="!isLoading && exercises">
+        <mat-form-field *ngIf="!(isLoading$ | async) && exercises">
           <mat-select
             formControlName="selectedExercise"
             placeholder="Select type of training"
@@ -19,10 +19,10 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-spinner *ngIf="isLoading"></mat-spinner>
+        <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
       </mat-card-content>
 
-      <mat-card-actions *ngIf="!isLoading" fxLayoutAlign="center">
+      <mat-card-actions *ngIf="!(isLoading$ | async)" fxLayoutAlign="center">
         <button
           *ngIf="exercises"
           type="submit"

@@ -1,27 +1,27 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { UIService } from 'src/app/shared/ui.service';
+import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
+import * as fromRoot from '../../app.reducer';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css'],
 })
-export class SignupComponent implements OnInit, OnDestroy {
+export class SignupComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private uiService: UIService
+    private store: Store<fromRoot.State>
   ) {
     this.maxDate = new Date();
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
   }
 
   maxDate: Date;
-  isLoading = false;
-  loadingSubscription: Subscription;
+  isLoading$: Observable<boolean>;
 
   // Build the form
   signupForm = this.fb.group({
@@ -32,14 +32,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
-      (loadingStatus) => (this.isLoading = loadingStatus)
-    );
-  }
-  ngOnDestroy(): void {
-    if (this.loadingSubscription) {
-      this.loadingSubscription.unsubscribe();
-    }
+    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
   }
 
   // Public methods
