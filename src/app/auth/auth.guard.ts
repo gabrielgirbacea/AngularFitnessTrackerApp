@@ -4,13 +4,11 @@ import {
   CanActivate,
   CanLoad,
   Route,
-  Router,
   RouterStateSnapshot,
   UrlSegment,
   UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
 import * as fromRoot from '../app.reducer';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
