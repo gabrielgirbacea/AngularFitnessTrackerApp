@@ -11,11 +11,7 @@ import * as fromTraining from './training.reducer';
 
 @Injectable()
 export class TrainingService {
-  constructor(
-    private db: AngularFirestore,
-    private uiService: UIService,
-    private store: Store<fromTraining.State>
-  ) {}
+  constructor(private db: AngularFirestore, private uiService: UIService, private store: Store<fromTraining.State>) {}
 
   private fbSubs: Subscription[] = [];
 
@@ -44,11 +40,7 @@ export class TrainingService {
             this.store.dispatch(new Training.SetAvailableTrainings(exercises));
           },
           (error) => {
-            this.uiService.showSnackbar(
-              'Fetching Exercises failed. Please try again.',
-              null,
-              3000
-            );
+            this.uiService.showSnackbar('Fetching Exercises failed. Please try again.', null, 3000);
             this.store.dispatch(new UI.StopLoading());
             this.store.dispatch(new Training.SetAvailableTrainings(null));
           }
@@ -62,9 +54,7 @@ export class TrainingService {
         .collection('finishedExercises')
         .valueChanges()
         .subscribe((finishedExercises: Exercise[]) => {
-          this.store.dispatch(
-            new Training.SetFinishedTrainings(finishedExercises)
-          );
+          this.store.dispatch(new Training.SetFinishedTrainings(finishedExercises));
         })
     );
   }

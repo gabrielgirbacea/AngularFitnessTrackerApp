@@ -17,21 +17,14 @@ import { take } from 'rxjs/operators';
 export class AuthGuard implements CanActivate, CanLoad {
   constructor(private store: Store<fromRoot.State>) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean | Observable<boolean> {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> {
     return this.store.select(fromRoot.getIsAuthenticated).pipe(take(1));
   }
 
   canLoad(
     route: Route,
     segments: UrlSegment[]
-  ):
-    | boolean
-    | UrlTree
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree> {
+  ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     return this.store.select(fromRoot.getIsAuthenticated).pipe(take(1));
   }
 }

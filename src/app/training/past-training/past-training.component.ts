@@ -13,28 +13,17 @@ import * as fromTraining from '../training.reducer';
   styleUrls: ['./past-training.component.css'],
 })
 export class PastTrainingComponent implements OnInit, AfterViewInit {
-  constructor(
-    private trainingService: TrainingService,
-    private store: Store<fromTraining.State>
-  ) {}
+  constructor(private trainingService: TrainingService, private store: Store<fromTraining.State>) {}
 
   dataSource = new MatTableDataSource<Exercise>();
-  displayedColumns: string[] = [
-    'date',
-    'name',
-    'duration',
-    'calories',
-    'state',
-  ];
+  displayedColumns: string[] = ['date', 'name', 'duration', 'calories', 'state'];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit(): void {
-    this.store
-      .select(fromTraining.getFinishedExercises)
-      .subscribe((exercises: Exercise[]) => {
-        this.dataSource.data = exercises;
-      });
+    this.store.select(fromTraining.getFinishedExercises).subscribe((exercises: Exercise[]) => {
+      this.dataSource.data = exercises;
+    });
     this.trainingService.fetchFinishedExercises();
   }
 

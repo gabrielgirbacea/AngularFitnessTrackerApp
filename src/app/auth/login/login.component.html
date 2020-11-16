@@ -1,39 +1,18 @@
 <section class="login-form">
-  <form
-    [formGroup]="loginForm"
-    fxLayout="column"
-    fxLayoutAlign="center center"
-    fxLayoutGap="10px"
-  >
+  <form [formGroup]="loginForm" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
     <div><h1>Log in</h1></div>
     <mat-form-field>
-      <input
-        formControlName="email"
-        type="email"
-        matInput
-        placeholder="Your email"
-      />
-      <mat-error *ngIf="emailControl.invalid">{{
-        getErrorMessage(emailControl)
-      }}</mat-error>
+      <input formControlName="email" type="email" matInput placeholder="Your email" />
+      <mat-error *ngIf="emailControl.invalid">{{ getErrorMessage(emailControl) }}</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input
-        formControlName="password"
-        type="password"
-        matInput
-        placeholder="Password"
-      />
-      <mat-error *ngIf="passwordControl.invalid">{{
-        getErrorMessage(passwordControl)
-      }}</mat-error>
+      <input formControlName="password" type="password" matInput placeholder="Password" />
+      <mat-error *ngIf="passwordControl.invalid">{{ getErrorMessage(passwordControl) }}</mat-error>
     </mat-form-field>
     <div *ngIf="!(isLoading$ | async)" fxLayout fxLayoutGap="10px">
       <a mat-button routerLink="/signup">Sign up</a>
-      <button (click)="login()" mat-raised-button color="primary">
-        Log in
-      </button>
+      <button (click)="login()" mat-raised-button color="primary">Log in</button>
     </div>
-    <mat-spinner *ngIf="isLoading$ |async"></mat-spinner>
+    <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
   </form>
 </section>

@@ -12,11 +12,7 @@ import * as fromRoot from '../../app.reducer';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private store: Store<fromRoot.State>
-  ) {}
+  constructor(private fb: FormBuilder, private authService: AuthService, private store: Store<fromRoot.State>) {}
 
   isLoading$: Observable<boolean>;
 

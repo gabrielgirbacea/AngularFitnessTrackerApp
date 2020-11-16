@@ -1,22 +1,12 @@
 <section class="new-training" fxLayout fxLayoutAlign="center">
   <form [formGroup]="newTrainingForm">
     <mat-card fxFlex.xs="100%" fxFlex="400px">
-      <mat-card-title fxLayoutAlign="center">
-        Time to start a workout!
-      </mat-card-title>
+      <mat-card-title fxLayoutAlign="center"> Time to start a workout! </mat-card-title>
 
       <mat-card-content fxLayoutAlign="center">
-        <mat-form-field
-          *ngIf="!(isLoading$ | async) && (availableExercises$ | async)"
-        >
-          <mat-select
-            formControlName="selectedExercise"
-            placeholder="Select type of training"
-          >
-            <mat-option
-              *ngFor="let exercise of availableExercises$ | async"
-              [value]="exercise.id"
-            >
+        <mat-form-field *ngIf="!(isLoading$ | async) && (availableExercises$ | async)">
+          <mat-select formControlName="selectedExercise" placeholder="Select type of training">
+            <mat-option *ngFor="let exercise of availableExercises$ | async" [value]="exercise.id">
               {{ exercise.name }}
             </mat-option>
           </mat-select>
@@ -35,13 +25,7 @@
         >
           Start
         </button>
-        <button
-          *ngIf="!(availableExercises$ | async)"
-          type="button"
-          mat-button
-          color="warn"
-          (click)="fetchExercises()"
-        >
+        <button *ngIf="!(availableExercises$ | async)" type="button" mat-button color="warn" (click)="fetchExercises()">
           Fetch Again
         </button>
       </mat-card-actions>

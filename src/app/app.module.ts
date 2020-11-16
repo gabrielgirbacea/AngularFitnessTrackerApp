@@ -20,12 +20,7 @@ import { AuthModule } from './auth/auth.module';
 import { reducers } from './app.reducer';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    WelcomeComponent,
-    HeaderComponent,
-    SidenavListComponent,
-  ],
+  declarations: [AppComponent, WelcomeComponent, HeaderComponent, SidenavListComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

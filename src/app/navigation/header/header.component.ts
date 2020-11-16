@@ -13,10 +13,7 @@ export class HeaderComponent implements OnInit {
   @Output() sidenavToggle = new EventEmitter<void>();
   isAuth$: Observable<boolean>;
 
-  constructor(
-    private authService: AuthService,
-    private store: Store<fromRoot.State>
-  ) {}
+  constructor(private authService: AuthService, private store: Store<fromRoot.State>) {}
 
   ngOnInit(): void {
     this.isAuth$ = this.store.select(fromRoot.getIsAuthenticated);

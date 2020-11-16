@@ -33,9 +33,7 @@ export class NewTrainingComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchExercises();
-    this.availableExercises$ = this.store.select(
-      fromTraining.getAvailableExercises
-    );
+    this.availableExercises$ = this.store.select(fromTraining.getAvailableExercises);
     this.isLoading$ = this.store.select(fromRoot.getIsLoading);
   }
 

@@ -1,34 +1,15 @@
 <section class="signup-form">
-  <form
-    [formGroup]="signupForm"
-    fxLayout="column"
-    fxLayoutAlign="center center"
-    fxLayoutGap="10px"
-  >
+  <form [formGroup]="signupForm" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
     <div><h1>Sign up</h1></div>
 
     <mat-form-field>
-      <input
-        formControlName="email"
-        type="email"
-        matInput
-        placeholder="Your email"
-      />
-      <mat-error *ngIf="emailControl.invalid">{{
-        getErrorMessage(emailControl)
-      }}</mat-error>
+      <input formControlName="email" type="email" matInput placeholder="Your email" />
+      <mat-error *ngIf="emailControl.invalid">{{ getErrorMessage(emailControl) }}</mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <input
-        formControlName="password"
-        type="password"
-        matInput
-        placeholder="Password"
-      />
-      <mat-error *ngIf="passwordControl.invalid">{{
-        getErrorMessage(passwordControl)
-      }}</mat-error>
+      <input formControlName="password" type="password" matInput placeholder="Password" />
+      <mat-error *ngIf="passwordControl.invalid">{{ getErrorMessage(passwordControl) }}</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -39,28 +20,16 @@
         [matDatepicker]="birthdateDatePicker"
         [max]="maxDate"
       />
-      <mat-error *ngIf="birthdateControl.invalid">{{
-        getErrorMessage(birthdateControl)
-      }}</mat-error>
-      <mat-datepicker-toggle
-        matSuffix
-        [for]="birthdateDatePicker"
-      ></mat-datepicker-toggle>
+      <mat-error *ngIf="birthdateControl.invalid">{{ getErrorMessage(birthdateControl) }}</mat-error>
+      <mat-datepicker-toggle matSuffix [for]="birthdateDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #birthdateDatePicker></mat-datepicker>
     </mat-form-field>
 
-    <mat-checkbox formControlName="termsAndConditions" color="primary">
-      Aggree to Terms and Conditions
-    </mat-checkbox>
+    <mat-checkbox formControlName="termsAndConditions" color="primary"> Aggree to Terms and Conditions </mat-checkbox>
 
     <div *ngIf="!(isLoading$ | async)" fxLayout fxLayoutGap="10px">
       <a mat-button routerLink="/login">Log In</a>
-      <button
-        (click)="signup()"
-        [disabled]="!termsAndConditionsControl.value"
-        mat-raised-button
-        color="primary"
-      >
+      <button (click)="signup()" [disabled]="!termsAndConditionsControl.value" mat-raised-button color="primary">
         Sign up
       </button>
     </div>

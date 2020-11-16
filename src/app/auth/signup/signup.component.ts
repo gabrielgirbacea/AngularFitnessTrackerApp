@@ -11,11 +11,7 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./signup.component.css'],
 })
 export class SignupComponent implements OnInit {
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private store: Store<fromRoot.State>
-  ) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private store: Store<fromRoot.State>) {
     this.maxDate = new Date();
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
   }
